@@ -77,49 +77,18 @@ const cText = (e="", col="#000000") => `<span style="color: ${col};">${e}</span>
 const dialogue = [
     [
         [
-            `Your name is \u2800PLATT\u2801, and you're from GEORGIA.`,
+            `Your name is PLATT, and you're from GEORGIA.`,
             `\n\n\u2191 : Agree,\n\u2193 : Disagree.`
         ]
     ]
 ];
-function refreshBox(parentDivId="outputBox") {
-  const parentDiv = document.getElementById(parentDivId);
-  if (!parentDiv) {
-    alert(`Parent div with ID '${parentDivId}' not found.`);
-    return;
-  }
-
-  const childDivs = parentDiv.querySelectorAll('div'); // Select all div elements within the parent
-
-  childDivs.forEach(childDiv => {
-    const originalContent = childDiv.innerHTML; // Store original content
-
-    // Clear the div's content
-    childDiv.innerHTML = '';
-
-    // Restore the original content after a brief delay (simulating refresh)
-    setTimeout(() => {
-      childDiv.innerHTML = originalContent;
-    }, 10); // Adjust the delay as needed
-  });
-}
 const printOutDialogue = (text=["",""]) => {
     if(actionRunning) return -1;
     toPrint += "\n"+text[0];
     actionRunning = true;
     printingInterval = window.setInterval(() => {
-        switch(toPrint[0]) {
-            case "\u2800":
-                outBox.innerHTML += `<span style="color: red;">`;
-                refreshBox();
-                break;
-            case "\u2801":
-                outBox.innerHTML += `</span>`;
-                break;
-            default:
-                outBox.innerHTML+=toPrint[0];
-        }
-         toPrint = toPrint.slice(1);
+        outBox.innerHTML+=toPrint[0];
+        toPrint = toPrint.slice(1);
         if(toPrint == "") {
             window.clearInterval(printingInterval);
             window.setTimeout(()=>{
