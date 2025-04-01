@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>12 Years a Slave</title>
+    </head>
+    <body>
+        <div style="width: 100%; height: 70vh; white-space:pre-wrap; font-family: monospace;" id="outputBox">
+    12 Years a Slave
+************************
+        </div>
+        <br />
+        <hr />
+        <table>
+            <tr>
+                <td>
+                    
+                </td>
+                <td onclick="action('up');">
+                    &uarr;
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td onclick="action('left');">
+                    &larr;
+                </td>
+                <td onclick="action('action');">
+                    &xcirc;
+                </td>
+                <td onclick="action('right');">
+                    &rarr;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    
+                </td>
+                <td onclick="action('down');">
+                    &darr;
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+        </table>
+        <style>
+            table, tr, td {
+                border-collapse: collapse;
+                border: 1px solid black;
+            }
+            table {
+                margin: auto;
+            }
+            td {
+                width: 2rem;
+                height: 2rem;
+                text-align: center;
+            }
+        </style>
+        <script>
+window.onerror = alert;
+var gamestage = [0,0];
+const outBox = document.getElementById("outputBox");
+let printingInterval;
+let toPrint = "";
+let actionRunning = false;
+const getDialogue = (indices) => {
+    let current = dialogue;
+    indices.forEach(e => {
+        current = current[e];
+    });
+    return current;
+};
+const cText = (e="", col="#000000") => `<span style="color: ${col};">${e}</span>`;
+const dialogue = [
+    [
+        [
+            `Your name is \u2800PLATT\u2801, and you're from GEORGIA.`,
+            `\n\n\u2191 : Agree,\n\u2193 : Disagree.`
+        ]
+    ]
+function refreshBox(parentDivId="outputBox") {
+  const parentDiv = document.getElementById(parentDivId);
+  if (!parentDiv) {
+    alert(`Parent div with ID '${parentDivId}' not found.`);
+    return;
+  }
+
+  const childDivs = parentDiv.querySelectorAll('div'); // Select all div elements within the parent
+
+  childDivs.forEach(childDiv => {
+    const originalContent = childDiv.innerHTML; // Store original content
+
+    // Clear the div's content
+    childDiv.innerHTML = '';
+
+    // Restore the original content after a brief delay (simulating refresh)
+    setTimeout(() => {
+      childDiv.innerHTML = originalContent;
+    }, 10); // Adjust the delay as needed
+  });
+}
+const printOutDialogue = (text=["",""]) => {
+    if(actionRunning) return -1;
+    toPrint += "\n"+text[0];
+    actionRunning = true;
+    printingInterval = window.setInterval(() => {
+        switch(toPrint[0]) {
+            case "\u2800":
+                outBox.innerHTML += `<span style="color: red;">`;
+                refreshBox();
+                break;
+            case "\u2801":
+                outBox.innerHTML += `</span>`;
+                break;
+            default:
+                outBox.innerHTML+=toPrint[0];
+        }
+         toPrint = toPrint.slice(1);
+        if(toPrint == "") {
+            window.clearInterval(printingInterval);
+            window.setTimeout(()=>{
+                outBox.innerHTML+=text[1];
+                actionRunning = false;
+            }, 450);    
+        }
+    }, 50);
+};
+function action(actionType) {
+    printOutDialogue(getDialogue(gamestage));
+}
+        </script>
+    </body>
+</html>
