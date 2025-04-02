@@ -97,6 +97,17 @@ const dialogue = [
                 "left": () => {gamestage=[0,0];}, // left
                 "right": () => {gamestage=[0,0];} // right
             }
+        ],
+        [
+            `..........`,
+            ``,
+            {
+                "pre": enableAll,
+                "up": ()=>{},
+                "down": ()=>{},
+                "left": ()=>{},
+                "right": ()=>{},
+            }
         ]
     ]
 ];
@@ -117,6 +128,7 @@ const printOutDialogue = (text=["",""]) => {
     }, 50);
 };
 function action(actionType) {
+    getDIalogue(gamestage)[2][actionType]();
     getDialogue(gamestage)[2].pre();
     printOutDialogue(getDialogue(gamestage));
 }
