@@ -27,7 +27,7 @@
                     <button id="leftButton" onclick="action('left');" style="width: 100%; height: 100%;">&larr;</button>
                 </td>
                 <td>
-                    <button id="xcircButton" onclick="action('circle');" style="width: 100%; height: 100%;">&xcirc;</button>
+                    <button id="xcircButton" onclick="action('xcirc');" style="width: 100%; height: 100%;">&xcirc;</button>
                 </td>
                 <td>
                     <button id="rightButton" onclick="action('right');" style="width: 100%; height: 100%;">&rarr;</button>
@@ -66,6 +66,12 @@ const outBox = document.getElementById("outputBox");
 let printingInterval;
 let toPrint = "";
 let actionRunning = false;
+const UPARR = "\u2191";
+const DOWNARR = "\u2193";
+const XCIRC = "\u25CB";
+const RIGHTARR = "\u2192";
+const LEFTARR = "\u2190";
+const ALLSYM = `${XCIRC}${UPARR}${RIGHTARR}${DOWNARR}${LEFTARR}`;
 const getDialogue = (indices) => {
     let current = dialogue;
     indices.forEach(e => {
@@ -89,24 +95,26 @@ const dialogue = [
     [
         [
             `Your name is PLATT, and you're from GEORGIA.`,
-            `\n\n\u2191 : Agree,\n\u2193 : Disagree.`,
+            `\n\n${UPARR} : Agree,\n${DOWNARR} : Disagree.`,
             {
                 "pre": () => {disableButtons(["left","right","xcirc"]);},
                 "up": () => {gamestage=[0,1];}, // up 
                 "down": () => {gamestage=[0,0];}, // down
                 "left": () => {gamestage=[0,0];}, // left
-                "right": () => {gamestage=[0,0];} // right
+                "right": () => {gamestage=[0,0];}, // right
+                "xcirc": ()=>{gamestage=[0,0];} // middle circle button
             }
         ],
         [
-            `..........`,
-            ``,
+            `.........................`,
+            `\n\n${ALLSYM} : View scenarios.`,
             {
                 "pre": enableAll,
-                "up": ()=>{},
-                "down": ()=>{},
-                "left": ()=>{},
-                "right": ()=>{},
+                "up": ()=>{gamestage=[0,2];},
+                "down": ()=>{gamestage=[0,2];},
+                "left": ()=>{gamestage=[0,2];},
+                "right": ()=>{gamestage=[0,2];},
+                "xicrc": ()=>{gamestage=[0,2];}
             }
         ]
     ]
@@ -128,10 +136,11 @@ const printOutDialogue = (text=["",""]) => {
     }, 50);
 };
 function action(actionType) {
-    getDIalogue(gamestage)[2][actionType]();
-    getDialogue(gamestage)[2].pre();
+    getDialogue(gamestage)[2][actionType]();
     printOutDialogue(getDialogue(gamestage));
+    getDialogue(gamestage)[2].pre();
 }
+window.onload = () => {getDialogue(gamestage)[2].pre();printOutDialogue(getDialogue(gamestage));}
         </script>
     </body>
 </html>
