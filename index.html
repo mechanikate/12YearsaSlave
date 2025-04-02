@@ -15,30 +15,30 @@
                 <td>
                     
                 </td>
-                <td onclick="action('up');">
-                    &uarr;
+                <td>
+                    <button id="upButton" onclick="action('up');" style="width: 100%; height: 100%;">&uarr;</button>
                 </td>
                 <td>
                     
                 </td>
             </tr>
             <tr>
-                <td onclick="action('left');">
-                    &larr;
+                <td>
+                    <button id="leftButton" onclick="action('left');" style="width: 100%; height: 100%;">&larr;</button>
                 </td>
-                <td onclick="action('action');">
-                    &xcirc;
+                <td>
+                    <button id="xcircButton" onclick="action('circle');" style="width: 100%; height: 100%;">&xcirc;</button>
                 </td>
-                <td onclick="action('right');">
-                    &rarr;
+                <td>
+                    <button id="rightButton" onclick="action('right');" style="width: 100%; height: 100%;">&rarr;</button>
                 </td>
             </tr>
             <tr>
                 <td>
                     
                 </td>
-                <td onclick="action('down');">
-                    &darr;
+                <td>
+                    <button id="downButton" onclick="action('down');" style="width: 100%; height: 100%;">&darr;</button>
                 </td>
                 <td>
                     
@@ -60,7 +60,7 @@
             }
         </style>
         <script>
-window.onerror = alert;
+window.onerror = (e) => alert(e);
 var gamestage = [0,0];
 const outBox = document.getElementById("outputBox");
 let printingInterval;
@@ -73,12 +73,30 @@ const getDialogue = (indices) => {
     });
     return current;
 };
+const enableAll = () => {
+    leftButton.removeAttribute("disabled");
+    rightButton.removeAttribute("disabled");
+    upButton.removeAttribute("disabled");
+    downButton.removeAttribute("disabled");
+    xcircButton.removeAttribute("disabled");
+};
+const disableButtons = (toDisable) => {
+    enableAll();
+    toDisable.forEach(e => document.getElementById(e+"Button").setAttribute("disabled",""));
+};
 const cText = (e="", col="#000000") => `<span style="color: ${col};">${e}</span>`;
 const dialogue = [
     [
         [
             `Your name is PLATT, and you're from GEORGIA.`,
-            `\n\n\u2191 : Agree,\n\u2193 : Disagree.`
+            `\n\n\u2191 : Agree,\n\u2193 : Disagree.`,
+            {
+                "pre": () => {disableButtons(["left","right","xcirc"]);},
+                "up": () => {gamestage=[0,1];}, // up 
+                "down": () => {gamestage=[0,0];}, // down
+                "left": () => {gamestage=[0,0];}, // left
+                "right": () => {gamestage=[0,0];} // right
+            }
         ]
     ]
 ];
@@ -99,6 +117,7 @@ const printOutDialogue = (text=["",""]) => {
     }, 50);
 };
 function action(actionType) {
+    getDialogue(gamestage)[2].pre();
     printOutDialogue(getDialogue(gamestage));
 }
         </script>
